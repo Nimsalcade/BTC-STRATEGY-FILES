@@ -1,0 +1,115 @@
+{
+  "complete_markets": 2015,
+  "complete_markets_unknown_outcome": 9,
+  "config": {
+    "bankroll_cap": 300.0,
+    "bankroll_risk_pct": 0.1,
+    "confirm_threshold": 0.76,
+    "fee_rate": 0.07,
+    "flat_stake": 300.0,
+    "leader_threshold": 0.75,
+    "min_after_pullback": 40.0,
+    "min_fill_ratio": 0.99,
+    "min_market_age": 180.0,
+    "pullback_threshold": 0.74,
+    "sample_interval_ms": 1000,
+    "starting_balance": 300.0
+  },
+  "duplicate_or_error_files": 1458,
+  "files_found": 4056,
+  "generated_at_epoch": 1787103064.394472,
+  "incomplete_markets": 583,
+  "input_roots": [
+    "/Users/bradamanka/Downloads/Stratgey testing"
+  ],
+  "markets_with_sequence_breaks": 0,
+  "notes": [
+    "Filename timestamp is treated as market START; round end is +300 seconds.",
+    "Outcome is inferred from extreme final recorded quote/trade prices, not an official settlement API.",
+    "DOWN ask/depth is derived as the binary complement of the normalized UP book.",
+    "Bankroll simulation assumes settlement proceeds are available before the next qualifying trade."
+  ],
+  "raw_bankroll": {
+    "account_multiple": 0.9261203525649018,
+    "bust_trade": null,
+    "ending_balance": 277.8361057694705,
+    "fee_rate": 0.07,
+    "losses": 12,
+    "max_drawdown_pct": 36.89233426461547,
+    "mode": "raw",
+    "net_pnl": -22.16389423052948,
+    "peak_balance": 310.19716731479724,
+    "risk_pct": 0.1,
+    "skipped_insufficient_depth": 0,
+    "skipped_unknown_outcome": 1,
+    "stake_cap": 300.0,
+    "starting_balance": 300.0,
+    "trades": 55,
+    "win_rate": 0.7818181818181819,
+    "wins": 43
+  },
+  "raw_strategy": {
+    "complete_markets": 2015,
+    "flat_net_pnl": -629.728883753531,
+    "flat_roi_on_debit": -0.03816538689415339,
+    "flat_total_debit": 16500.0,
+    "losses": 12,
+    "mode": "raw",
+    "resolved_signals": 55,
+    "signals": 56,
+    "status_counts": {
+      "leader_confirm_too_early_in_market": 114,
+      "leader_confirm_too_soon_after_pullback": 1425,
+      "no_pullback": 280,
+      "opposite_confirmed_first": 140,
+      "trade": 56
+    },
+    "win_rate": 0.7818181818181819,
+    "wins": 43
+  },
+  "runtime_seconds": 748.6018559932709,
+  "sampled_bankroll": {
+    "account_multiple": 0.9919901197582982,
+    "bust_trade": null,
+    "ending_balance": 297.59703592748946,
+    "fee_rate": 0.07,
+    "losses": 13,
+    "max_drawdown_pct": 43.052459617588156,
+    "mode": "sampled",
+    "net_pnl": -2.4029640725105423,
+    "peak_balance": 390.185342038592,
+    "risk_pct": 0.1,
+    "skipped_insufficient_depth": 0,
+    "skipped_unknown_outcome": 0,
+    "stake_cap": 300.0,
+    "starting_balance": 300.0,
+    "trades": 73,
+    "win_rate": 0.821917808219178,
+    "wins": 60
+  },
+  "sampled_strategy": {
+    "complete_markets": 2015,
+    "flat_net_pnl": -249.05760161053962,
+    "flat_roi_on_debit": -0.011372493224225554,
+    "flat_total_debit": 21900.0,
+    "losses": 13,
+    "mode": "sampled",
+    "resolved_signals": 73,
+    "signals": 73,
+    "status_counts": {
+      "leader_confirm_too_early_in_market": 121,
+      "leader_confirm_too_soon_after_pullback": 1182,
+      "no_pullback": 453,
+      "opposite_confirmed_first": 186,
+      "trade": 73
+    },
+    "win_rate": 0.821917808219178,
+    "wins": 60
+  },
+  "scan_stats": {
+    "archives_seen": 7,
+    "candidate_sources": 4056,
+    "local_zst_seen": 0
+  },
+  "unique_markets": 2598
+}

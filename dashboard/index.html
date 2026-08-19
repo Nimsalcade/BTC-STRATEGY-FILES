@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTC 75/74/76 Strategy Backtest Dashboard</title>
+  <meta name="description" content="Interactive dashboard for analyzing the Polymarket BTC 5-minute delayed re-breakout strategy backtest results.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Animated background particles -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L2 8v12l12 6 12-6V8L14 2z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+            <path d="M14 8l-6 3v6l6 3 6-3v-6l-6-3z" fill="url(#logoGrad)" opacity="0.3"/>
+            <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-title">BTC 75/74/76 Backtest</h1>
+          <p class="logo-subtitle">Polymarket 5-Min Delayed Re-Breakout Strategy</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="mode-toggle" id="modeToggle">
+          <button class="mode-btn active" data-mode="raw" id="btnRaw">RAW</button>
+          <button class="mode-btn" data-mode="sampled" id="btnSampled">SAMPLED 1s</button>
+          <div class="mode-slider" id="modeSlider"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content">
+    <!-- KPI Cards -->
+    <section class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card kpi-primary" id="kpiNetPnl">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 7l-5-5-5 5M7 17l5 5 5-5"/></svg>
+        </div>
+        <div class="kpi-label">Net P&L (Flat)</div>
+        <div class="kpi-value" id="valNetPnl">—</div>
+        <div class="kpi-sub" id="subNetPnl"></div>
+      </div>
+      <div class="kpi-card" id="kpiWinRate">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div class="kpi-label">Win Rate</div>
+        <div class="kpi-value" id="valWinRate">—</div>
+        <div class="kpi-sub" id="subWinRate"></div>
+      </div>
+      <div class="kpi-card" id="kpiEndBal">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <div class="kpi-label">Ending Balance</div>
+        <div class="kpi-value" id="valEndBal">—</div>
+        <div class="kpi-sub" id="subEndBal"></div>
+      </div>
+      <div class="kpi-card" id="kpiDrawdown">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="kpi-label">Max Drawdown</div>
+        <div class="kpi-value" id="valDrawdown">—</div>
+        <div class="kpi-sub" id="subDrawdown"></div>
+      </div>
+      <div class="kpi-card" id="kpiSignals">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="kpi-label">Total Signals</div>
+        <div class="kpi-value" id="valSignals">—</div>
+        <div class="kpi-sub" id="subSignals"></div>
+      </div>
+      <div class="kpi-card" id="kpiRoi">
+        <div class="kpi-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="kpi-label">ROI on Debit</div>
+        <div class="kpi-value" id="valRoi">—</div>
+        <div class="kpi-sub" id="subRoi"></div>
+      </div>
+    </section>
+
+    <!-- Charts row 1 -->
+    <section class="charts-row">
+      <div class="chart-card chart-wide" id="equityChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Equity Curve</h2>
+          <span class="chart-badge" id="equityBadge">$300 Start</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="equityChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts row 2 -->
+    <section class="charts-row">
+      <div class="chart-card" id="pnlChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Trade P&L Distribution</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="pnlChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card" id="winLossChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Win / Loss Breakdown</h2>
+        </div>
+        <div class="chart-container chart-container-doughnut">
+          <canvas id="winLossChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts row 3 -->
+    <section class="charts-row">
+      <div class="chart-card" id="drawdownChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Drawdown Over Time</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="drawdownChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card" id="sideChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Entry Side Distribution</h2>
+        </div>
+        <div class="chart-container chart-container-doughnut">
+          <canvas id="sideChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts row 4 -->
+    <section class="charts-row">
+      <div class="chart-card chart-wide" id="dailyChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Daily P&L Summary</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="dailyChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strategy Status Breakdown -->
+    <section class="charts-row">
+      <div class="chart-card chart-wide" id="statusChartCard">
+        <div class="chart-header">
+          <h2 class="chart-title">Signal Status Breakdown</h2>
+          <span class="chart-badge" id="statusBadge">2,015 Complete Markets</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trade Log -->
+    <section class="trade-log-section" id="tradeLogSection">
+      <div class="chart-card chart-wide">
+        <div class="chart-header">
+          <h2 class="chart-title">Bankroll Trade Log</h2>
+          <div class="trade-log-controls">
+            <input type="text" class="search-input" placeholder="Search trades..." id="tradeSearch">
+            <select class="filter-select" id="tradeFilter">
+              <option value="all">All Trades</option>
+              <option value="win">Wins Only</option>
+              <option value="loss">Losses Only</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="trade-table" id="tradeTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date (UTC)</th>
+                <th>Side</th>
+                <th>Outcome</th>
+                <th>Result</th>
+                <th>Entry Time</th>
+                <th>Stake</th>
+                <th>Avg Price</th>
+                <th>P&L</th>
+                <th>Balance</th>
+                <th>Drawdown</th>
+              </tr>
+            </thead>
+            <tbody id="tradeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer info -->
+    <section class="footer-info">
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Data Span</span>
+          <span class="info-value" id="infoDateRange">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Total Markets</span>
+          <span class="info-value" id="infoTotalMarkets">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Fee Rate</span>
+          <span class="info-value" id="infoFeeRate">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Thresholds</span>
+          <span class="info-value" id="infoThresholds">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Runtime</span>
+          <span class="info-value" id="infoRuntime">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Risk Per Trade</span>
+          <span class="info-value" id="infoRisk">—</span>
+        </div>
+      </div>
+      <p class="disclaimer">Research backtester — outcomes inferred from final recorded prices, not official settlements. Past performance ≠ future results.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
